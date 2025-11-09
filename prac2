@@ -1,0 +1,68 @@
+Write a program for sending alert messages to the user for controlling and interacting with your environment.”
+Components Needed (in Tinkercad)
+| Component                | Quantity | Purpose            |
+| ------------------------ | -------- | ------------------ |
+| Arduino Uno R3           | 1        | Controller         |
+| TMP36 Temperature Sensor | 1        | Detect temperature |
+| LED                      | 1        | Alert indicator    |
+| Resistor (220Ω)          | 1        | Protect LED        |
+| (Optional) Buzzer        | 1        | Sound alert        |
+
+Wiring
+| TMP36 Pin  | Connects To | Description  |
+| ---------- | ----------- | ------------ |
+| Left pin   | +5V         | Power        |
+| Middle pin | A0          | Analog input |
+| Right pin  | GND         | Ground       |
+
+| LED Pin               | Connects To    |
+| --------------------- | -------------- |
+| Long leg (anode +)    | D13            |
+| Short leg (cathode –) | Resistor → GND |
+
+(If you add a buzzer, connect one leg to D12 and the other to GND.)
+
+
+// Environmental Alert System using TMP36 Sensor
+
+const int sensorPin = A0;
+const int ledPin = 13;
+const int buzzerPin = 12; // optional
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.println("System Initialized. Monitoring Environment...");
+}
+
+void loop() {
+  // Read sensor
+  int reading = analogRead(sensorPin);
+  float voltage = reading * (5.0 / 1023.0);
+  float temperatureC = (voltage - 0.5) * 100.0;
+
+  // Display on Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperatureC);
+  Serial.println(" °C");
+
+  // Check condition and send alert
+  if (temperatureC > 30.0) {
+    Serial.println("⚠️ ALERT: HIGH TEMPERATURE DETECTED!");
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+  } 
+  else if (temperatureC < 15.0) {
+    Serial.println("⚠️ ALERT: TEMPERATURE TOO LOW!");
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+  }
+  else {
+    Serial.println("✅ Environment Normal.");
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  }
+
+  delay(2000);
+}
