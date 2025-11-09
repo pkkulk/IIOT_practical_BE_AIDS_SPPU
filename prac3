@@ -1,0 +1,99 @@
+Write an Arduino/ Raspberry pi program for interfacing with PIR sensor Experiment
+
+
+* **PIR Sensor** = Passive Infrared Sensor
+  It detects **infrared radiation** emitted by humans or animals.
+* When motion is detected → the PIR sensor **outputs HIGH (1)**
+  When no motion → **outputs LOW (0)**
+
+We use this to **trigger** actions — like turning ON a light or buzzer, sending a message, etc.
+
+---
+
+## ⚙️ Components Required (in Tinkercad or hardware)
+
+| Component         | Quantity | Description              |
+| ----------------- | -------- | ------------------------ |
+| Arduino Uno R3    | 1        | Microcontroller          |
+| PIR Motion Sensor | 1        | Motion detector          |
+| LED               | 1        | Indicator light          |
+| Resistor (220Ω)   | 1        | Current limiting for LED |
+| Jumper wires      | few      | Connections              |
+
+---
+
+## 🔌 Wiring Diagram
+
+| PIR Pin | Connects To       | Description              |
+| ------- | ----------------- | ------------------------ |
+| **VCC** | +5V               | Power supply             |
+| **OUT** | Digital Pin **2** | Output signal to Arduino |
+| **GND** | GND               | Ground                   |
+
+| LED Pin               | Connects To    |
+| --------------------- | -------------- |
+| Long leg (anode +)    | Pin **13**     |
+| Short leg (cathode –) | Resistor → GND |
+
+---
+
+## 💻 Arduino Code (PIR + LED Alert)
+
+```cpp
+// PIR Sensor Interfacing Experiment
+const int pirPin = 2;     // PIR sensor output pin
+const int ledPin = 13;    // LED pin
+
+int pirState = LOW;       // stores current PIR status
+int val = 0;              // read value from sensor
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(pirPin, INPUT);
+  Serial.begin(9600);
+  Serial.println("PIR Sensor Test Initialized...");
+  delay(2000); // sensor stabilization
+}
+
+void loop() {
+  val = digitalRead(pirPin);  // read PIR sensor
+
+  if (val == HIGH) {          // motion detected
+    digitalWrite(ledPin, HIGH);
+    if (pirState == LOW) {
+      Serial.println("⚠️ Motion Detected!");
+      pirState = HIGH;
+    }
+  } 
+  else {                      // no motion
+    digitalWrite(ledPin, LOW);
+    if (pirState == HIGH) {
+      Serial.println("No Motion.");
+      pirState = LOW;
+    }
+  }
+}
+```
+
+---
+
+## ▶️ Running in Tinkercad
+
+1. Add **Arduino Uno** and **PIR sensor** from the component list.
+2. Wire it as per the table above.
+3. Add **1 LED + resistor** on pin 13.
+4. Paste the code and click **Start Simulation**.
+5. In simulation, **click on the PIR sensor** —
+   then toggle “Detects motion” → **ON** → LED lights up and “Motion Detected!” appears in Serial Monitor.
+
+---
+
+## 💡 Output
+
+| Motion          | LED | Serial Output         |
+| --------------- | --- | --------------------- |
+| No motion       | OFF | “No Motion.”          |
+| Motion detected | ON  | “⚠️ Motion Detected!” |
+
+---
+
