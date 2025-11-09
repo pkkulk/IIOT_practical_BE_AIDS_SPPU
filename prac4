@@ -1,0 +1,119 @@
+## 🎯 **Aim**
+Write a program to design and develop a **user interface (UI)** for **monitoring and controlling a CPS (Cyber Physical System)**.
+
+---
+
+## 🧠 **Concept / Theory**
+
+A **Cyber-Physical System (CPS)** is a system where **physical devices (sensors & actuators)** interact with **cyber components (software, computer, or cloud)**.
+
+For example:
+
+* A **temperature sensor** (physical world) sends data to Arduino (cyber world).
+* The user can **monitor** temperature on a UI (Serial Monitor or Dashboard).
+* The user can **control** an actuator (like an LED, motor, or fan) from that interface.
+
+So, the “UI” here means —
+a **Serial Monitor–based user interface** (text commands) or a **Graphical dashboard** (like IoT dashboard).
+
+---
+
+## ⚙️ **Components Required**
+
+| Component                  | Quantity | Description        |
+| -------------------------- | -------- | ------------------ |
+| Arduino Uno R3             | 1        | Controller         |
+| TMP36 Sensor               | 1        | Temperature input  |
+| LED                        | 1        | Actuator           |
+| Resistor (220Ω)            | 1        | For LED            |
+| USB Cable / Serial Monitor | 1        | For UI interaction |
+
+---
+
+## 🔌 **Circuit Connections**
+
+| TMP36 Pin  | Connects To |
+| ---------- | ----------- |
+| Left pin   | 5V          |
+| Middle pin | A0          |
+| Right pin  | GND         |
+
+| LED Leg               | Connects To    |
+| --------------------- | -------------- |
+| Long leg (anode +)    | D13            |
+| Short leg (cathode –) | Resistor → GND |
+
+---
+
+## 💻 **Arduino Code: UI for Monitoring & Control**
+
+```cpp
+// CPS User Interface - Temperature Monitor & LED Control
+
+const int sensorPin = A0;  // TMP36 pin
+const int ledPin = 13;     // LED control pin
+
+float temperatureC;
+String userInput = "";
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  Serial.println("=== Cyber Physical System Interface ===");
+  Serial.println("Commands: ");
+  Serial.println("  ON  -> Turn LED ON");
+  Serial.println("  OFF -> Turn LED OFF");
+  Serial.println("---------------------------------------");
+}
+
+void loop() {
+  // --- Read and display sensor data ---
+  int reading = analogRead(sensorPin);
+  float voltage = reading * (5.0 / 1023.0);
+  temperatureC = (voltage - 0.5) * 100.0;
+
+  Serial.print("Temperature: ");
+  Serial.print(temperatureC);
+  Serial.println(" °C");
+
+  // --- User Control through Serial Monitor ---
+  if (Serial.available() > 0) {
+    userInput = Serial.readStringUntil('\n');
+    userInput.trim();
+
+    if (userInput == "ON" || userInput == "on") {
+      digitalWrite(ledPin, HIGH);
+      Serial.println("LED Turned ON ✅");
+    } 
+    else if (userInput == "OFF" || userInput == "off") {
+      digitalWrite(ledPin, LOW);
+      Serial.println("LED Turned OFF ❌");
+    } 
+    else {
+      Serial.println("Invalid Command. Type 'ON' or 'OFF'.");
+    }
+  }
+
+  delay(2000);
+}
+```
+
+---
+
+## 🖥️ **How It Works**
+
+1. Upload the program to Arduino.
+2. Open the **Serial Monitor** (Ctrl + Shift + M).
+3. Set **baud rate = 9600**.
+4. You’ll see:
+
+   ```
+   === Cyber Physical System Interface ===
+   Commands:
+     ON  -> Turn LED ON
+     OFF -> Turn LED OFF
+   ---------------------------------------
+   Temperature: 27.5 °C
+   ```
+5. Type `ON` → LED turns ON
+6. Type `OFF` → LED turns OFF
