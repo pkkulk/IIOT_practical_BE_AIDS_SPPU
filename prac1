@@ -1,0 +1,55 @@
+for first arduino
+
+#include <SoftwareSerial.h>
+SoftwareSerial wireless(2, 3); // RX, TX
+
+const int sensorPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+  wireless.begin(4800);
+  Serial.println("Sensor Node Ready");
+}
+
+void loop() {
+  int reading = analogRead(sensorPin);
+  float voltage = reading * (5.0 / 1023.0);
+  float temperatureC = (voltage - 0.5) * 100.0;
+
+  Serial.print("Temperature: ");
+  Serial.println(temperatureC);
+
+  // Send temperature data to receiver node
+  wireless.println(temperatureC);
+
+  delay(2000); // send every 2 sec
+}
+
+
+
+for second arduino
+#include <SoftwareSerial.h>
+SoftwareSerial wireless(2, 3); // RX, TX
+
+const int ledPin = 13;
+
+void setup() {
+  Serial.begin(9600);
+  wireless.begin(4800);
+  pinMode(ledPin, OUTPUT);
+  Serial.println("Receiver Node Ready");
+}
+
+void loop() {
+  if (wireless.available()) {
+    float temp = wireless.parseFloat();
+    Serial.print("Received Temperature: ");
+    Serial.println(temp);
+
+    if (temp > 30.0) {
+      digitalWrite(ledPin, HIGH); // LED ON if temp > 30°C
+    } else {
+      digitalWrite(ledPin, LOW);  // LED OFF if below 30°C
+    }
+  }
+}
