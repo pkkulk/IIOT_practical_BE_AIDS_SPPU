@@ -1,10 +1,10 @@
 Hardware Setup in Tinkercad
 🔹 Arduino #1 (Sensor Node)
-| Component               | Pin | Connection        |
-| ----------------------- | --- | ----------------- |
-| TMP36 sensor left pin   | 5 V | Power             |
-| TMP36 sensor middle pin | A0  | Analog input      |
-| TMP36 sensor right pin  | GND | Ground            |
+| Component                     | Pin    | Connection        |
+| -----------------------       | ---    | ----------------- |
+| TMP36 sensor left pin (power) | 5 V    | Power             |
+| TMP36 sensor middle pin       | A0     | Analog input      |
+| TMP36 sensor right pin (ground)  | GND | Ground            |
 | D3                      | →   | D2 of Arduino #2  |
 | GND                     | →   | GND of Arduino #2 |
 
