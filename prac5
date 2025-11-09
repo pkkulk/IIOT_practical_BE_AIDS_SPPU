@@ -1,0 +1,107 @@
+To write a program for **sending sensor data to the cloud and storing it in a database (simulated)** using Arduino and Serial Monitor.
+
+---
+
+## ⚙️ **2️⃣ Components Required**
+
+| Component                | Quantity | Description                      |
+| ------------------------ | -------- | -------------------------------- |
+| Arduino Uno R3           | 1        | Main microcontroller             |
+| TMP36 Temperature Sensor | 1        | To sense environment temperature |
+| LED (optional)           | 1        | To indicate high temperature     |
+| Resistor (220Ω)          | 1        | For LED                          |
+| Jumper Wires             | few      | Connections                      |
+
+*(All these components are available in Tinkercad Circuits.)*
+
+---
+
+## 🪛 **3️⃣ Circuit Connections**
+
+| TMP36 Pin  | Connect To | Description                   |
+| ---------- | ---------- | ----------------------------- |
+| Left pin   | 5V         | Power supply                  |
+| Middle pin | A0         | Sensor output (analog signal) |
+| Right pin  | GND        | Ground                        |
+
+**(Optional LED)**
+
+| LED Leg               | Connect To     |
+| --------------------- | -------------- |
+| Long leg (anode +)    | Pin 13         |
+| Short leg (cathode –) | Resistor → GND |
+
+✅ That’s it! Simple 3 connections — works perfectly in Tinkercad.
+
+---
+
+## 💻 **4️⃣ Arduino Code: Simulated Cloud Upload System**
+
+```cpp
+// =====================================================
+// Simulated Cloud Storage System using Arduino
+// Demonstrates reading sensor data and simulating upload
+// =====================================================
+
+const int sensorPin = A0;  // TMP36 middle pin
+const int ledPin = 13;     // Optional LED indicator
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  Serial.println("=== IoT Cloud Data Upload System (Simulation) ===");
+  Serial.println("Collecting sensor data and simulating cloud upload...");
+  delay(2000);
+}
+
+void loop() {
+  // Step 1: Read temperature sensor
+  int reading = analogRead(sensorPin);
+  float voltage = reading * (5.0 / 1023.0);
+  float temperatureC = (voltage - 0.5) * 100.0; // TMP36 formula
+
+  // Step 2: Display data locally
+  Serial.print("Temperature: ");
+  Serial.print(temperatureC);
+  Serial.println(" °C");
+
+  // Step 3: Simulate sending data to cloud
+  Serial.println("Uploading to cloud database...");
+  delay(1000); // simulate delay for upload
+  Serial.println("Data stored successfully in cloud!");
+  Serial.println("-----------------------------------");
+
+  // Step 4 (optional): Control LED based on temperature
+  if (temperatureC > 30.0) {
+    digitalWrite(ledPin, HIGH);  // LED ON if high temp
+  } else {
+    digitalWrite(ledPin, LOW);   // LED OFF otherwise
+  }
+
+  delay(4000); // repeat every 4 seconds
+}
+```
+
+---
+
+
+
+```
+=== IoT Cloud Data Upload System (Simulation) ===
+Collecting sensor data and simulating cloud upload...
+Temperature: 27.4 °C
+Uploading to cloud database...
+Data stored successfully in cloud!
+-----------------------------------
+```
+
+---
+
+## 📊 **6️⃣ Expected Output Behavior**
+
+| Temperature | Serial Output               | LED (if added) |
+| ----------- | --------------------------- | -------------- |
+| < 30 °C     | “Data stored successfully…” | OFF            |
+| > 30 °C     | “Data stored successfully…” | ON             |
+
+---
